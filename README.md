@@ -143,10 +143,10 @@ const filteredSkips = useMemo(() => {
 ### **Installation**
 ```bash
 # Clone the repository
-git clone [repository-url]
+git clone https://github.com/samuelGodad/RemWastCodingChallange.git
 
 # Navigate to project directory
-cd waste-skip
+cd RemWastCodingChallange/waste-skip
 
 # Install dependencies
 npm install
@@ -238,7 +238,7 @@ xl: 1280px  /* Large screens */
 
 This project demonstrates modern React development practices, clean architecture principles, and attention to user experience. The codebase is production-ready and follows industry best practices for maintainability and scalability.
 
-**Live Demo**: [Your deployed URL here]  
-**Repository**: [Your repository URL here]
+**Repository**: https://github.com/samuelGodad/RemWastCodingChallange  
+**Live Demo**: https://codesandbox.io/p/github/samuelGodad/RemWastCodingChallange/main?import=true
 
 Built with ❤️ for WeWantWaste technical assessment.
