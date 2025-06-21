@@ -26,14 +26,18 @@ export const SkipGrid = ({
     );
   }
 
+  const hasSelection = selectedSkip !== null;
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-      {skips.map((skip) => (
+      {skips.map((skip, index) => (
         <SkipCard
           key={skip.id}
           skip={skip}
           isSelected={selectedSkip === skip.id}
           onSelect={() => onSkipSelect(skip.id)}
+          isFirstCard={index === 0}
+          hasSelection={hasSelection}
         />
       ))}
     </div>

@@ -1,4 +1,5 @@
 import { Check, AlertTriangle, Star, Zap, Shield, Clock } from 'lucide-react';
+import { useEffect, useRef } from 'react';
 
 interface Skip {
   id: string;
@@ -15,9 +16,13 @@ interface SkipCardProps {
   skip: Skip;
   isSelected: boolean;
   onSelect: (skipId: string) => void;
+  isFirstCard?: boolean;
+  hasSelection?: boolean;
 }
 
-const SkipCard = ({ skip, isSelected, onSelect }: SkipCardProps) => {
+const SkipCard = ({ skip, isSelected, onSelect, isFirstCard = false, hasSelection = false }: SkipCardProps) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
   const handleClick = () => {
     if (skip.isAvailable) {
       onSelect(skip.id);
@@ -28,8 +33,31 @@ const SkipCard = ({ skip, isSelected, onSelect }: SkipCardProps) => {
     if (skip.image) return skip.image;
     
     const capacityNumber = skip.capacity.match(/\d+/)?.[0] || '8';
-    return `https://yozbrydxdlcxghkphhtq.supabase.co/storage/v1/object/public/skips/skip-sizes/${capacityNumber}-yarder-skip.jpg`;
+    return `https://yozbrydxdlcxghkphhtq.supabase.co/storage/v1/object/public/skips/skip-sizes/${capacityNumber}-yard-skip.jpg`;
   };
+
+  const getSkipVideoUrl = () => {
+    const capacityNumber = skip.capacity.match(/\d+/)?.[0] || '8';
+    return `https://yozbrydxdlcxghkphhtq.supabase.co/storage/v1/object/public/skips/skip-sizes-video/${capacityNumber}-yard-skip.mp4`;
+  };
+
+  // Show video if:
+  // 1. This card is selected, OR
+  // 2. This is the first card AND no card is selected
+  const shouldShowVideo = isSelected || (isFirstCard && !hasSelection);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      if (shouldShowVideo) {
+        videoRef.current.play().catch(error => {
+          console.log('Video autoplay failed:', error);
+        });
+      } else {
+        videoRef.current.pause();
+        videoRef.current.currentTime = 0;
+      }
+    }
+  }, [shouldShowVideo]);
 
   const getCapacityColor = () => {
     const capacity = parseInt(skip.capacity.match(/\d+/)?.[0] || '0');
@@ -69,14 +97,29 @@ const SkipCard = ({ skip, isSelected, onSelect }: SkipCardProps) => {
           {skip.capacity}
         </div>
 
-        {/* Image Section */}
+        {/* Media Section */}
         <div className="relative h-48 overflow-hidden">
+          <video 
+            ref={videoRef}
+            src={getSkipVideoUrl()}
+            className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 ${shouldShowVideo ? 'block' : 'hidden'}`}
+            loop
+            muted
+            playsInline
+            onError={(e) => {
+              // Fallback to image if video fails to load
+              e.currentTarget.style.display = 'none';
+              const img = e.currentTarget.nextElementSibling as HTMLImageElement;
+              if (img) img.style.display = 'block';
+            }}
+          />
+          
           <img 
             src={getSkipImageUrl()}
             alt={`${skip.name} skip`}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 ${shouldShowVideo ? 'hidden' : 'block'}`}
             onError={(e) => {
-              e.currentTarget.src = 'https://yozbrydxdlcxghkphhtq.supabase.co/storage/v1/object/public/skips/skip-sizes/8-yarder-skip.jpg';
+              e.currentTarget.src = 'https://yozbrydxdlcxghkphhtq.supabase.co/storage/v1/object/public/skips/skip-sizes/8-yard-skip.jpg';
             }}
           />
           

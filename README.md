@@ -241,4 +241,4 @@ This project demonstrates modern React development practices, clean architecture
 **Repository**: https://github.com/samuelGodad/RemWastCodingChallange  
 **Live Demo**: https://codesandbox.io/p/github/samuelGodad/RemWastCodingChallange/main?import=true
 
-Built with ❤️ for WeWantWaste technical assessment.
+
